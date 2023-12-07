@@ -14,11 +14,20 @@ import uuid
 import random
 from huggingface_hub import hf_hub_download
 import base64
-
+import subprocess
 
 class InferlessPythonModel:
     
     def initialize(self):
+        commands = [
+            'export LC_ALL="en_US.UTF-8"',
+            'export LD_LIBRARY_PATH="/usr/lib64-nvidia"',
+            'export LIBRARY_PATH="/usr/local/cuda/lib64/stubs"',
+            'ldconfig /usr/lib64-nvidia'
+        ]
+        for command in commands:
+            subprocess.run(command, shell=True)
+            
         self.pipe = StableVideoDiffusionPipeline.from_pretrained("stabilityai/stable-video-diffusion-img2vid-xt", torch_dtype=torch.float16, variant="fp16")
         self.pipe.to("cuda")
         self.pipe.unet = torch.compile(self.pipe.unet, mode="reduce-overhead", fullgraph=True)
