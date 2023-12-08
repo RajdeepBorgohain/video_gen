@@ -36,6 +36,7 @@ class InferlessPythonModel:
 
     def infer(self,inputs):
         image_url = inputs['image_url']
+        webhook_url = inputs['webhook_url']
         max_64_bit_int = 2**63 - 1
         image = self.resize_image(image_url)
 
@@ -61,6 +62,11 @@ class InferlessPythonModel:
             base64_encoded_data = base64.b64encode(video_bytes_io.read())
             base64_string = base64_encoded_data.decode("utf-8")
 
+
+        WEBHOOK_URL = f'{webhook_url}/generated_result'
+        data = {"generated_video": base64_string}
+        response = requests.post(WEBHOOK_URL, json=data)
+        
         return {"generated_video": base64_string}
 
     def resize_image(self,image_url, output_size=(1024, 576)):
