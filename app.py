@@ -63,7 +63,7 @@ class InferlessPythonModel:
             base64_string = base64_encoded_data.decode("utf-8")
 
 
-        WEBHOOK_URL = f'https://eaad-34-106-47-90.ngrok-free.app/generated_result'
+        WEBHOOK_URL = f'https://squirrel-actual-mastodon.ngrok-free.app/generated_result'
         data = {"generated_video": base64_string}
         response = requests.post(WEBHOOK_URL, json=data)
         
